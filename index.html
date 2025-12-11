@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Links</title>
+    <style>
+        /* CSS Styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #C9C9C9;
+            padding-top: 50px;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 800px;
+        }
+
+        .link-box {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            overflow: hidden;
+            user-select: none;
+
+            /* --- ICON AS BACKGROUND IMAGE STYLES --- */
+            background-repeat: no-repeat;
+            background-position: center 30px;
+            background-size: 64px 64px;
+        }
+
+        .link-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+      
+        .link-box.permanent.a {
+            background-image: url('1.png');
+            background-color: #f1f1f1;
+        }
+        .link-box.permanent.b {
+            background-image: url('2.png');
+            background-color: #f1f1f1;
+        }
+        .link-box.permanent.c {
+            background-image: url('icon.jpg');
+            background-color: #f1f1f1;
+        }
+        .link-box.permanent.d {
+            background-image: url('4.jpg');
+            background-color: #f1f1f1;
+        }
+        .link-box.permanent.e {
+            background-image: url('5.jpg');
+            background-color: #f1f1f1;
+        }
+        .link-box.permanent.f {
+            background-image: url('6.jpeg');
+            background-color: #f1f1f1;
+        }.link-box.permanent.g {
+            background-image: url('7.jpg');
+            background-color: #f1f1f1;
+        }
+        .link-box.permanent.h {
+            background-image: url('8.jpeg');
+            background-color: #f1f1f1;
+        }
+        .link-box.permanent.i {
+            background-image: url('9.png');
+            background-color: #f1f1f1;
+        }
+        .link-box.permanent.j {
+            background-image: url('10.png');
+            background-color: #f1f1f1;
+        }
+        /* -------------------------------------- */
+
+        /* + icon box */
+        #add-box-trigger { /* ID selector for the '+' box */
+            font-size: 40px;
+            font-weight: bold;
+            color: #4CAF50;
+            background-image: none;
+        }
+
+        .link-box p {
+            margin: 0 0 10px;
+            padding: 2px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 90%;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 5px;
+        }
+
+        /* URL Input Modal (Styling remains same) */
+        #url-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .modal-content input[type="url"],
+        .modal-content input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .modal-content button {
+            padding: 10px 20px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #done-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #cancel-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Context Menu/Remove Button Styling (Unchanged) */
+        .context-menu {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            display: none;
+            overflow: hidden;
+        }
+
+        .context-menu button {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            text-align: center;
+            transition: background-color 0.1s;
+        }
+
+        .context-menu button:hover {
+            background-color: #d32f2f;
+        }
+
+        .link-box.active .context-menu {
+            display: block;
+        }
+
+        .link-box.permanent .context-menu {
+             display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="links-container">
+
+        <a href="https://golutheghost-4444.github.io/Fancy-texts/" target="_blank" class="link-box permanent a" title="Stylish Names">
+            <p>Stylish-Names</p>
+        </a>
+
+        <a href="https://golutheghost-4444.github.io/Monochromatic-Colour-Shades-Generator/" target="_blank" class="link-box permanent b" title="Colour Shades">
+            <p>Colour-Shades</p>
+        </a>
+
+        <a href="https://golu496.github.io/Typing-Trainer-Pro/" target="_blank" class="link-box permanent c" title="Typing Speed Pro">
+            <p>Typing-Speed-Pro</p>
+        </a>
+
+        <a href="https://golu496.github.io/Tic-Tac-Toe_by_GOLu/" target="_blank" class="link-box permanent d" title="Snake & Mongoose">
+            <p>Snake & Mongoose</p>
+        </a>
+
+         <a href="https://golu496.github.io/Tic-Tac-Toe/" target="_blank" class="link-box permanent e" title="Tic Tac Toe">
+            <p>Tic Tac Toe</p>
+        </a>
+
+         <a href="https://golu496.github.io/Flappy-Bird/" target="_blank" class="link-box permanent f" title="Flappy Bird">
+            <p>Flappy Bird</p>
+        </a>
+
+        <a href="https://golu496.github.io/sduyjmhnbdxjmj/" target="_blank" class="link-box permanent g" title="Video Call">
+            <p>Video Call</p>
+        </a>
+
+         <a href="https://golu496.github.io/Gold_pzl_enc_x19k77-Public/" target="_blank" class="link-box permanent h" title="Map">
+            <p>Map</p>
+        </a>
+
+        <a href="https://golutheghost-4444.github.io/Chat-Online-free/" target="_blank" class="link-box permanent i" title="Random Chat">
+            <p>Random Chat</p>
+        </a>
+
+          <a href="https://golutheghost-4444.github.io/Resume-maker-free/" target="_blank" class="link-box permanent j" title="Resume Maker">
+            <p>Resume Maker</p>
+        </a>
+
+
+        <div class="link-box" id="add-box-trigger">
+            +
+        </div>
+    </div>
+
+    <div id="url-modal">
+        <div class="modal-content">
+            <label for="url-input">URL Paste Karein:</label>
+            <input type="url" id="url-input" placeholder="e.g., https://example.com" required>
+
+            <label for="title-input">Title/Name Likhein:</label>
+            <input type="text" id="title-input" placeholder="e.g., My Blog" required>
+
+            <div style="text-align: right;">
+                <button id="cancel-btn">Cancel</button>
+                <button id="done-btn">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Functionality
+
+        const addBoxTrigger = document.getElementById('add-box-trigger');
+        const urlModal = document.getElementById('url-modal');
+        const urlInput = document.getElementById('url-input');
+        const titleInput = document.getElementById('title-input');
+        const doneBtn = document.getElementById('done-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const linksContainer = document.getElementById('links-container');
+
+        let pressTimer;
+
+        // --- Helper functions for Custom Links (User Added) ---
+
+        function createLinkBox(url, title) {
+            const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
+            const urlObj = new URL(formattedUrl);
+            const baseUrl = urlObj.hostname;
+
+            // Favicon URL: Using a public service to fetch icons for user-added links
+            const faviconUrl = `https://www.google.com/s2/favicons?sz=64&domain_url=${baseUrl}`;
+
+            const newLinkBox = document.createElement('a');
+            newLinkBox.href = formattedUrl;
+            newLinkBox.target = "_blank";
+            newLinkBox.className = 'link-box user-added';
+            newLinkBox.title = title || formattedUrl;
+            newLinkBox.setAttribute('data-url', formattedUrl);
+            newLinkBox.setAttribute('data-title', title);
+
+            // ICON AS BACKGROUND IMAGE SETTING (User Added)
+            // If the favicon fails, fallback to the first letter placeholder
+            newLinkBox.style.backgroundImage = `url('${faviconUrl}'), url('https://via.placeholder.com/64/cccccc/333333?text=${title.charAt(0).toUpperCase()}')`;
+
+            newLinkBox.innerHTML = `
+                <p>${title}</p>
+                <div class="context-menu">
+                    <button class="remove-btn">Remove</button>
+                </div>
+            `;
+
+            // Long Press event listeners
+            newLinkBox.addEventListener('mousedown', startPress, false);
+            newLinkBox.addEventListener('touchstart', startPress, false);
+            newLinkBox.addEventListener('mouseup', endPress, false);
+            newLinkBox.addEventListener('touchend', endPress, false);
+            newLinkBox.addEventListener('touchmove', endPress, false);
+
+            newLinkBox.querySelector('.remove-btn').addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                if (confirm(`Are you sure you want to remove ${title}?`)) {
+                    newLinkBox.remove();
+                    saveLinks();
+                }
+            });
+
+            newLinkBox.addEventListener('click', (event) => {
+                if (newLinkBox.classList.contains('active')) {
+                    event.preventDefault();
+                    newLinkBox.classList.remove('active');
+                }
+            });
+
+            return newLinkBox;
+        }
+
+        // Long Press Logic
+        function startPress(event) {
+            if (event.type === 'mousedown' && event.button !== 0) return;
+
+            document.querySelectorAll('.link-box.active').forEach(box => {
+                if (box !== this) box.classList.remove('active');
+            });
+
+            const linkBox = this;
+            if (!linkBox.classList.contains('permanent')) {
+                 pressTimer = setTimeout(() => {
+                    linkBox.classList.add('active');
+                }, 500);
+            }
+        }
+
+        function endPress() {
+            clearTimeout(pressTimer);
+        }
+
+        // --- Modal and Add Button Logic ---
+        addBoxTrigger.addEventListener('click', () => {
+            urlModal.style.display = 'flex';
+            urlInput.focus();
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            urlModal.style.display = 'none';
+            urlInput.value = '';
+            titleInput.value = '';
+        });
+
+        doneBtn.addEventListener('click', () => {
+            const url = urlInput.value.trim();
+            const title = titleInput.value.trim();
+
+            if (url && title) {
+                const newLinkBox = createLinkBox(url, title);
+                linksContainer.insertBefore(newLinkBox, addBoxTrigger);
+
+                saveLinks();
+
+                urlModal.style.display = 'none';
+                urlInput.value = '';
+                titleInput.value = '';
+            } else {
+                alert('Please enter both URL and Title.');
+            }
+        });
+
+        titleInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                doneBtn.click();
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.link-box')) {
+                 document.querySelectorAll('.link-box.active').forEach(box => {
+                    box.classList.remove('active');
+                });
+            }
+        });
+
+        // --- Local Storage Logic ---
+
+        function saveLinks() {
+            const links = [];
+            document.querySelectorAll('.link-box.user-added').forEach(box => {
+                links.push({
+                    url: box.getAttribute('data-url'),
+                    title: box.getAttribute('data-title')
+                });
+            });
+            localStorage.setItem('quickLinks', JSON.stringify(links));
+        }
+
+        function loadLinks() {
+            const savedLinks = localStorage.getItem('quickLinks');
+            if (savedLinks) {
+                const links = JSON.parse(savedLinks);
+                links.forEach(link => {
+                    const newLinkBox = createLinkBox(link.url, link.title);
+                    linksContainer.insertBefore(newLinkBox, addBoxTrigger);
+                });
+            }
+        }
+
+        // Permanent links को Long Press event listeners दें (URLs और Titles को अब HTML में सेट किया गया है)
+        document.querySelectorAll('.link-box.permanent').forEach(box => {
+            box.addEventListener('mousedown', startPress, false);
+            box.addEventListener('touchstart', startPress, false);
+            box.addEventListener('mouseup', endPress, false);
+            box.addEventListener('touchend', endPress, false);
+            box.addEventListener('touchmove', endPress, false);
+        });
+
+        window.onload = loadLinks;
+
+    </script>
+</body>
+</html>
